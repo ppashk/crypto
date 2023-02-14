@@ -10,9 +10,9 @@ import static com.crypto.users.security.services.Security.currentUserId;
 
 public class CurrentUserIdResolver implements HandlerMethodArgumentResolver {
 
-    public CurrentUserIdResolver() {
-        System.out.println("Ready");
-    }
+//    public CurrentUserIdResolver() {
+//        System.out.println("Ready");
+//    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -23,7 +23,7 @@ public class CurrentUserIdResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) throws Exception {
         String id = webRequest.getParameter("id");
-        System.out.println("parameter = " + id);
+//        System.out.println("parameter = " + id);
         return id == null ? currentUserId().toString() : id;
     }
 }

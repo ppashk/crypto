@@ -60,7 +60,7 @@ public class UserService {
     public UserDto createUser(UserRegistrationForm form) {
         validateUserOnCreate(form);
         User user = mapUser(form);
-        if (form.getIsAdmin()) {
+        if (falseIfNull(form.getIsAdmin())) {
             user.getRoles().add(ADMIN);
         }
         return toUserDto(save(user));
@@ -109,8 +109,8 @@ public class UserService {
     }
 
     private void validateUserOnCreate(UserRegistrationForm form) {
-        checkArgumentCustom(isEmailNotRegistered(form.getEmail()), EMAIL_ALREADY_EXISTS);
         checkArgumentCustom(isNotBlank(form.getEmail()) && isValidMailAddress(form.getEmail()), WRONG_FORMAT_OF_EMAIL);
+        checkArgumentCustom(isEmailNotRegistered(form.getEmail()), EMAIL_ALREADY_EXISTS);
         checkArgumentCustom(isNotBlank(form.getPassword()), PASSWORD_REQUIRED);
         checkArgumentCustom(PASSWORD_PATTERN.matcher(form.getPassword()).matches(), WRONG_FORMAT_OF_PASSWORD);
         checkArgumentCustom(form.getPassword().equals(form.getRepeatPassword()), PASSWORD_DOES_NOT_MATCH);
@@ -145,6 +145,7 @@ public class UserService {
 
     private void updateUserFields(UserForm form, User user) {
         checkArgumentCustom(user.getId().equals(currentUserId()) || isAdmin(), NO_AUTHORITIES_TO_CHANGE_THIS_USER);
+        checkArgumentCustom(isNotBlank(form.getEmail()) && isValidMailAddress(form.getEmail()), WRONG_FORMAT_OF_EMAIL);
         if (!form.getEmail().equalsIgnoreCase(user.getEmail())) {
             checkArgumentCustom(isEmailNotRegistered(form.getEmail()), EMAIL_ALREADY_EXISTS);
             user.setEmail(trimToNull(form.getEmail()));

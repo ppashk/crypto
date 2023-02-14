@@ -98,4 +98,8 @@ public class JavaUtils {
             return null;
         }
     }
+
+    public static Boolean falseIfNull(Boolean value) {
+        return null != value && value;
+    }
 }
