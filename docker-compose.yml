@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=crypto
+    logging:
+      options:
+        max-size: 100m
+        max-file: "3"
+    ports:
+      - '5433:5432'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data

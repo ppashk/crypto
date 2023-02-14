@@ -1,0 +1,309 @@
+---
+swagger: '2.0'
+info:
+  title: crypto
+  version: 0.0.1
+x-package-name: com.crypto.api
+x-datetime-type: X
+x-api-name-prefix: Crypto
+x-path-variable-name: crypto.url
+x-security-role: ROLE_ADMIN
+basePath: /api
+paths:
+  /token:
+    post:
+      x-security-role: ROLE_ANONYMOUS
+      description: generate auth token
+      operationId: generateToken
+      produces:
+        - 'application/text'
+      consumes:
+        - 'application/json'
+      parameters:
+        - name: form
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CredentialForm'
+      responses:
+        200:
+          description: Returns auth token
+          schema:
+            type: string
+  /registration:
+    post:
+      x-security-role: ROLE_ANONYMOUS
+      operationId: registerUser
+      consumes:
+        - 'application/json'
+      parameters:
+        - name: form
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserRegistrationForm'
+      responses:
+        200:
+          description: OK
+  /users:
+    get:
+      operationId: getUsers
+      produces:
+        - 'application/json'
+      parameters:
+        - name: includeInactive
+          in: query
+          required: false
+          type: boolean
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: size
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: order
+          in: query
+          required: false
+          type: string
+        - name: sort
+          in: query
+          required: false
+          type: string
+        - name: filter
+          in: query
+          required: false
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/UserResponse'
+    post:
+      operationId: createUser
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - name: form
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserRegistrationForm'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/UserDto'
+  /users/{id}:
+    get:
+      x-security-role: ROLE_USER
+      operationId: getUserById
+      produces:
+        - 'application/json'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: int64
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/UserDto'
+    put:
+      x-security-role: ROLE_USER
+      operationId: updateUser
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - name: form
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserForm'
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: int64
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/UserDto'
+  /users/{id}/add-photo:
+    put:
+      x-security-role: ROLE_USER
+      operationId: addUserPhoto
+      consumes:
+        - 'multipart/form-data'
+      parameters:
+        - name: file
+          in: formData
+          required: true
+          type: file
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: int64
+      responses:
+        202:
+          description: OK
+  /users/{id}/get-photo:
+    get:
+      x-security-role: ROLE_USER
+      operationId: getUserPhoto
+      produces:
+        - 'application/json'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: int64
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/FileDto'
+definitions:
+  UserRole:
+    type: string
+    enum:
+      - ADMIN
+      - USER
+  UserResponse:
+    type: object
+    properties:
+      total:
+        type: integer
+        format: int64
+      message:
+        type: string
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/UserShortDto'
+  TokenDto:
+    type: object
+    required:
+      - email
+      - iat
+    properties:
+      email:
+        type: string
+      iat:
+        type: string
+        format: date-time
+  CredentialForm:
+    type: object
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  UserDto:
+    type: object
+    required:
+      - id
+      - email
+      - firstName
+      - lastName
+      - active
+    properties:
+      id:
+        type: string
+        format: int64
+      createdTime:
+        type: string
+        format: date-time
+      updatedTime:
+        type: string
+        format: date-time
+      email:
+        type: string
+      lastName:
+        type: string
+      firstName:
+        type: string
+      active:
+        type: boolean
+      roles:
+        type: array
+        items:
+          $ref: '#/definitions/UserRole'
+  UserShortDto:
+    type: object
+    required:
+      - email
+      - firstName
+      - lastName
+      - active
+    properties:
+      email:
+        type: string
+      lastName:
+        type: string
+      firstName:
+        type: string
+      active:
+        type: boolean
+  UserRegistrationForm:
+    type: object
+    required:
+      - email
+      - password
+      - repeatPassword
+      - firstName
+      - lastName
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      repeatPassword:
+        type: string
+      lastName:
+        type: string
+      firstName:
+        type: string
+      isAdmin:
+        type: boolean
+  UserForm:
+    type: object
+    properties:
+      email:
+        type: string
+      oldPassword:
+        type: string
+      password:
+        type: string
+      repeatPassword:
+        type: string
+      lastName:
+        type: string
+      firstName:
+        type: string
+  FileDto:
+    type: object
+    required:
+      - name
+      - content
+    properties:
+      name:
+        type: string
+      content:
+        type: string
+        format: byte

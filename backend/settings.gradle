@@ -1,0 +1,2 @@
+apply from: '../etc/java-support/gradle-configs/settings-plugin-management.groovy', to: pluginManagement
+apply from: '../etc/java-support/gradle-configs/settings.groovy'

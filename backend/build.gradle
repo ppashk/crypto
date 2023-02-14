@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'pmd'
+    id 'checkstyle'
+    id 'com.github.spotbugs'
+    id 'com.github.slamdev.openapi-spring-generator'
+    id 'io.spring.dependency-management'
+    id 'org.jetbrains.gradle.plugin.idea-ext'
+    id 'org.springframework.boot'
+}
+
+apply from: '../etc/java-support/gradle-configs/build.groovy'
+
+openapi {
+    useOptional false
+    server fileTree('src/main/resources/rest-api') { include('*.yml') }
+}
+
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'javax.servlet:javax.servlet-api'
+    implementation 'jakarta.servlet:jakarta.servlet-api'
+    implementation 'com.google.guava:guava'
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'org.projectlombok:lombok'
+    implementation 'com.vladmihalcea:hibernate-types-52:2.9.9'
+    implementation 'com.nimbusds:nimbus-jose-jwt'
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'org.jsoup:jsoup:1.10.1'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation 'org.xhtmlrenderer:flying-saucer-pdf-itext5:9.1.19'
+
+
+    runtimeOnly 'org.springframework.boot:spring-boot-starter-jetty'
+    runtimeOnly 'org.flywaydb:flyway-core'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    annotationProcessor 'org.projectlombok:lombok'
+
+    compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.apache.commons:commons-text:1.1'
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation 'org.mockito:mockito-inline'
+    testRuntimeOnly 'com.h2database:h2'
+}

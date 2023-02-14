@@ -1,0 +1,23 @@
+swagger: '2.0'
+info:
+  title: crypto I18N
+  version: 0.0.1
+x-package-name: com.crypto.api
+paths: { }
+definitions:
+  I18N:
+    type: string
+    enum:
+      - EMAIL_ALREADY_EXISTS
+      - WRONG_FORMAT_OF_EMAIL
+      - WRONG_FORMAT_OF_PASSWORD
+      - WRONG_PASSWORD
+      - FIRSTNAME_REQUIRED
+      - LASTNAME_REQUIRED
+      - FILE_NOT_FOUND
+      - PASSWORD_DOES_NOT_MATCH
+      - PHOTO_EXTENSION_MUST_BE_PNG
+      - PASSWORD_REQUIRED
+      - NO_AUTHORITIES_TO_CHANGE_THIS_USER
+      - NO_AUTHORITIES_TO_VIEW_THIS_USER
+      - NO_USER_PHOTO
